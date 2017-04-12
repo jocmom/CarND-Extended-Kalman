@@ -35,9 +35,13 @@ FusionEKF::FusionEKF() {
   TODO:
     * Finish initializing the FusionEKF.
     * Set the process and measurement noises
-  */
-
-
+    * The notation ν∼N(0,Q) defines the process noise as a 
+    * gaussian distribution with mean zero and covariance Q. 
+    * 
+    * The notation ω∼N(0,R) defines the measurement noise as a 
+    * gaussian distribution with mean zero and covariance R
+    */
+  
 }
 
 /**
