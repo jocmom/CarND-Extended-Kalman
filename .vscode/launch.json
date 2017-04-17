@@ -6,11 +6,11 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/build/ExtendedKF",
-            "args": [],
+            "args": ["${workspaceRoot}/data/sample-laser-radar-measurement-data-1.txt", "output.txt"],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
             "environment": [],
-            "externalConsole": true,
+            "externalConsole": false,
             "linux": {
                 "MIMode": "gdb",
                 "setupCommands": [
