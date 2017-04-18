@@ -40,12 +40,23 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   TODO:
     * update the state by using Extended Kalman Filter equations
   */
+  const float pi = 3.14;
   float rho = sqrt(x_[0]*x_[0] + x_[1]*x_[1]);
   float phi = 0.;
   // don't divide by zero
   if(fabs(x_[0]) > 0.001) {
     phi = atan2(x_[1], x_[0]);
   } 
+  // When calculating phi in y = z - h(x) for radar measurements,
+  // the resulting angle phi in the y vector should be adjusted so that
+  // it is between -pi and pi. The Kalman filter is expecting small angle
+  // values between the range -pi and pi.
+  while(phi > pi) {
+    phi -= 2*pi;
+  }
+  while(phi < -pi) {
+    phi += 2*pi;
+  }
   float rho_dot = 0.;
   // don't divide by zero
   if(fabs(rho) > 0.001) {
