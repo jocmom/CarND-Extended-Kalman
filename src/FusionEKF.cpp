@@ -105,7 +105,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       // to determine the state variable velocities vx​ and v​y​​ 
       x_in << rho*cos(phi), rho*sin(phi), 0, 0; 
       ekf_.Init(x_in, P, F, Hj_, R_radar_, Q);
-      previous_timestamp_ = measurement_pack.timestamp_;
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       /**
@@ -116,13 +115,12 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       x_in << measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1], 0, 0;
 
       ekf_.Init(x_in, P, F, H_laser_, R_laser_, Q);
-      previous_timestamp_ = measurement_pack.timestamp_;
-      is_initialized_ = true;
-      return;
     }
+    cout << x_in << endl;
 
+    previous_timestamp_ = measurement_pack.timestamp_;
     // done initializing, no need to predict or update
-    // is_initialized_ = true;
+    is_initialized_ = true;
     return;
   }
 
@@ -149,9 +147,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 	float dt_3 = dt_2*dt;
 	float dt_4 = dt_3*dt;
 	ekf_.Q_ << dt_4*noise_ax/4, 0, dt_3*noise_ax/2, 0,
-    0, dt_2*noise_ay/4, 0, dt_3*noise_ay/2,
-    dt_2*noise_ax/2, 0, dt_2*noise_ax, 0,
+    0, dt_4*noise_ay/4, 0, dt_3*noise_ay/2,
+    dt_3*noise_ax/2, 0, dt_2*noise_ax, 0,
     0, dt_3*noise_ay/2, 0, dt_2*noise_ay;
+
 	//3. Call the Kalman Filter predict() function
 	//std::cout << "Predict" << endl;
   ekf_.Predict();
