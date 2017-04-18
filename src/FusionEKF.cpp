@@ -100,8 +100,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       float rho = measurement_pack.raw_measurements_[0];
       float phi = measurement_pack.raw_measurements_[1];
       float rho_dot = measurement_pack.raw_measurements_[2];
-      x_in << rho*cos(phi), rho*sin(phi), rho_dot*cos(phi), rho_dot*sin(phi); 
-
+      // Although radar gives velocity data in the form of the range rate
+      // rho_dot, a radar measurement does not contain enough information
+      // to determine the state variable velocities vx​ and v​y​​ 
+      x_in << rho*cos(phi), rho*sin(phi), 0, 0; 
       ekf_.Init(x_in, P, F, Hj_, R_radar_, Q);
       previous_timestamp_ = measurement_pack.timestamp_;
     }
