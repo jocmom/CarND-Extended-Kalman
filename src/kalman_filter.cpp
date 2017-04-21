@@ -1,4 +1,5 @@
 #include "kalman_filter.h"
+#include "tools.h"
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -40,9 +41,8 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   TODO:
     * update the state by using Extended Kalman Filter equations
   */
-  const float pi = 3.14;
-  float rho = sqrt(x_[0]*x_[0] + x_[1]*x_[1]);
-  float phi = 0.;
+  double rho = sqrt(x_[0]*x_[0] + x_[1]*x_[1]);
+  double phi = 0.;
   // don't divide by zero
   if(fabs(x_[0]) > 0.001) {
     phi = atan2(x_[1], x_[0]);
@@ -51,13 +51,8 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   // the resulting angle phi in the y vector should be adjusted so that
   // it is between -pi and pi. The Kalman filter is expecting small angle
   // values between the range -pi and pi.
-  while(phi > pi) {
-    phi -= 2*pi;
-  }
-  while(phi < -pi) {
-    phi += 2*pi;
-  }
-  float rho_dot = 0.;
+  phi = Tools::NormalizeAngle(phi);
+  double rho_dot = 0.;
   // don't divide by zero
   if(fabs(rho) > 0.001) {
     rho_dot = (x_[0]*x_[2] + x_[1]*x_[3]) / rho; 
@@ -65,6 +60,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   VectorXd z_pred = VectorXd(3);
   z_pred << rho, phi, rho_dot;
   VectorXd y = z - z_pred;
+  y[1] = Tools::NormalizeAngle(y[1]);
   UpdateCommon(y);
 }
 

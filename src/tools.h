@@ -24,7 +24,11 @@ public:
   * A helper method to calculate Jacobians.
   */
   Eigen::MatrixXd CalculateJacobian(const Eigen::VectorXd& x_state);
-
+  
+  /**
+  * A helper method to normalize angle in radian -PI < angle < PI
+  */
+  static double NormalizeAngle(double angle);
 };
 
 #endif /* TOOLS_H_ */
